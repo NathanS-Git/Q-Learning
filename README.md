@@ -1,4 +1,4 @@
-# Q-learning applied to OpenAI's cart-pole problem
+# Q-Learning applied to OpenAI's cart-pole problem
 
 This is my implementation of Q-learning on OpenAI's cart pole problem. Despite the state space being continuous for this problem, I discretize the values into buckets allowing Q-learning to function. 
 
@@ -6,9 +6,9 @@ The model fairly consistently solves the environment in about 600 episodes.
 
 ## Example
 
-The model learning to balance the pole with the cart
+The learned model balancing the pole.
 
-![Cart](docs/learning.gif)
+![Cart](docs/learned.gif)
 
 ## Runs
 
