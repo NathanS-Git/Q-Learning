@@ -29,12 +29,12 @@ The learned model balancing the pole.
 ## Todo
 
 - [x] Q-learning
-- [] SARSA
-- [] Double Q-learning
-- [] Dyna-Q
-- [] Deep Q-learning
+- [ ] SARSA
+- [ ] Double Q-learning
+- [ ] Dyna-Q
+- [ ] Deep Q-learning
 
 ## Inspired by / References
 ```bibtex
-@book{sutton_barto_2018, title{Reinforcement Learning: An Introduction}, publisher={MIT Press Ltd}, author={Sutton, Richard S. and Barto, Andrew G.}, year={2018}}
+@book{sutton_barto_2018, title={Reinforcement Learning: An Introduction}, publisher={MIT Press Ltd}, author={Sutton, Richard S. and Barto, Andrew G.}, year={2018}}
 ```
