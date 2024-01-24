@@ -1,13 +1,12 @@
-import gym
+import gymnasium as gym
+from gymnasium.wrappers.time_limit import TimeLimit
 import numpy as np
 from matplotlib import pyplot as plt
 import os
 
-# This is my (Nathan Smith) implementation of Q-Learning for OpenAI's gym CartPole problem.
-
 def Q_Learning():
 
-    env = gym.make('CartPole-v1', new_step_api=False)
+    env = gym.make('CartPole-v1')
 
     actions = [0,1] # Action space. 0 - Pushes car to the left, 1 - Pushes cart to the right
 
@@ -38,14 +37,16 @@ def Q_Learning():
     min_epsilon = 0.1
     epsilon_decay = 0.00008
 
-    episode_count = 10000 # Max episode count
-    solved_reward = 490 # The average reward threshold we wish to get to
+    max_episode_count = 1000 # Max episode count
+    solved_reward = 490 # The average reward threshold we wish to get to (490)
 
     debug_info = False # Increases computation time
     render = False # Watch it learn! Dramatically increases computation time.
     terminate_on_solve = True
 
     # ---------------------------------
+
+    solved = False
 
     # The Q-Table of values. e.g. Q[S][A]
     Q_table = {}
@@ -64,7 +65,7 @@ def Q_Learning():
     streak = 0 # Number of times the reward threshold has been reached in a row
     previous_total_rewards = [] # History of reward per episode
 
-    while episode < episode_count: 
+    while episode < max_episode_count: 
         alpha = max(min_alpha,alpha/(1+alpha_decay*episode))
         epsilon = max(min_epsilon,epsilon/(1+epsilon_decay*episode))
 
@@ -73,10 +74,11 @@ def Q_Learning():
         state = tuple([np.digitize(observation[i],bins[i]) for i in range(len(observation))])
 
         done = False
+        truncated = False
         total_reward = 0
-        while not done: # Loop for each step of episode
+        while not done and not truncated: # Loop for each step of episode
             time_steps += 1
-            if render:
+            if render or solved:
                 env.render()
 
             # Choose A from S using policy derived from Q (e.g. epsilon-greedy)
@@ -86,7 +88,7 @@ def Q_Learning():
                 action = max(Q_table[state],key=Q_table[state].get)
 
             # Take action A, observe R, S'
-            next_observation,reward,done,_ = env.step(action)
+            next_observation,reward,done,truncated,_ = env.step(action)
             
             total_reward += reward
 
@@ -120,8 +122,10 @@ def Q_Learning():
             print("Avg over last {} episodes: {:.2f}".format(len(previous_total_rewards[-100:]),np.mean(previous_total_rewards[-100:])))
             print("Solved in {} episodes".format(episode))
             if terminate_on_solve:
-                break
-    
+                #break
+                solved = True
+                #debug_info = True
+
     plt.title("Q-Learning")
     plt.xlabel("Episode")
     plt.ylabel("Reward")
@@ -129,5 +133,6 @@ def Q_Learning():
     plt.show()
 
 
-if __name__ == "__main__":
+
+if (__name__ == "__main__"):
     Q_Learning()
