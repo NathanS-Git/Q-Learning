@@ -4,9 +4,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 import os
 
-def Q_Learning():
+def main():
 
-    env = gym.make('CartPole-v1')
+    env = gym.make("CartPole-v1")
 
     actions = [0,1] # Action space. 0 - Pushes car to the left, 1 - Pushes cart to the right
 
@@ -19,34 +19,21 @@ def Q_Learning():
     theta_dot_bins = np.linspace(-1,1,bc_theta_dot-1) # Same story here. 
     bins = (x_bins,x_dot_bins,theta_bins,theta_dot_bins)
 
-    observation = env.reset()
+    observation,_ = env.reset()
     # Discretize the observation data
     state = tuple([np.digitize(observation[i],bins[i]) for i in range(len(observation))])
 
-    # ---------------------------------
-    # Parameters (You may change these)
-    # ---------------------------------
-
     gamma = 0.99
 
-    alpha = 0.1 # The starting value of alpha
-    min_alpha = 0.1 # The minimum value alpha will go to
-    alpha_decay = 0.00008
+    alpha_start = 0.1 
+    alpha_end = 0.1 
+    alpha_end_episode = 200
 
-    epsilon = 1
-    min_epsilon = 0.1
-    epsilon_decay = 0.00008
+    epsilon_start = 1
+    epsilon_end = 0.1
+    epsilon_end_episode = 200
 
     max_episode_count = 1000 # Max episode count
-    solved_reward = 490 # The average reward threshold we wish to get to (490)
-
-    debug_info = False # Increases computation time
-    render = False # Watch it learn! Dramatically increases computation time.
-    terminate_on_solve = True
-
-    # ---------------------------------
-
-    solved = False
 
     # The Q-Table of values. e.g. Q[S][A]
     Q_table = {}
@@ -59,27 +46,23 @@ def Q_Learning():
                     Q_table[(x,x_dot,theta,theta_dot)] = {}
                     for a in actions:
                         Q_table[(x,x_dot,theta,theta_dot)][a] = 0
-        
-    episode = 0 # Episode number we're on
-    time_steps = 0 # Total time steps
-    streak = 0 # Number of times the reward threshold has been reached in a row
+
     previous_total_rewards = [] # History of reward per episode
 
-    while episode < max_episode_count: 
-        alpha = max(min_alpha,alpha/(1+alpha_decay*episode))
-        epsilon = max(min_epsilon,epsilon/(1+epsilon_decay*episode))
+    for episode in range(max_episode_count):
+        #alpha = max(min_alpha,alpha/(1+alpha_decay*episode))
+        alpha = max(episode*((alpha_end-alpha_start)/alpha_end_episode)+alpha_start, alpha_end)
+        #epsilon = max(min_epsilon,epsilon/(1+epsilon_decay*episode))
+        epsilon = max(episode*((epsilon_end-epsilon_start)/epsilon_end_episode)+epsilon_start, epsilon_end)
 
-        observation = env.reset() # x x_dot theta theta_dot (Initialize S)
+        observation,_ = env.reset() # x x_dot theta theta_dot (Initialize S)
         # Discretize the observation data
         state = tuple([np.digitize(observation[i],bins[i]) for i in range(len(observation))])
 
         done = False
         truncated = False
         total_reward = 0
-        while not done and not truncated: # Loop for each step of episode
-            time_steps += 1
-            if render or solved:
-                env.render()
+        while not done and not truncated:
 
             # Choose A from S using policy derived from Q (e.g. epsilon-greedy)
             if np.random.random() < epsilon:
@@ -99,40 +82,19 @@ def Q_Learning():
             Q_table[state][action] = Q_table[state][action]+alpha*(reward + gamma*max(Q_table[next_state].values()) - Q_table[state][action])
             state = next_state # S <- S'
 
-            if debug_info and episode != 0:
-                os.system("clear")
-                print("State: ",state)
-                print("Alpha: ",alpha)
-                print("Epsilon: ",epsilon)
-                print("Streak: ",streak)
-                print("Episode: {}\t Total reward: {}".format(episode,total_reward))
-                print("Avg over last {} episodes: {:.2f}".format(len(previous_total_rewards[-100:]),np.mean(previous_total_rewards[-100:])))
-
-        if total_reward >= solved_reward:
-            streak += 1
-        else:
-            streak = 0
 
         previous_total_rewards.append(total_reward)
-        episode += 1
 
-        # If the algorithm solved the cartpole problem, print it (and stop the simulation).
-        if len(previous_total_rewards) >= 100 and np.mean(previous_total_rewards[-100:]) > solved_reward:
-            print()
-            print("Avg over last {} episodes: {:.2f}".format(len(previous_total_rewards[-100:]),np.mean(previous_total_rewards[-100:])))
-            print("Solved in {} episodes".format(episode))
-            if terminate_on_solve:
-                #break
-                solved = True
-                #debug_info = True
+        if len(previous_total_rewards) > 100:
+            print(sum(previous_total_rewards[-100:])/100,epsilon,episode,total_reward)
 
-    plt.title("Q-Learning")
-    plt.xlabel("Episode")
-    plt.ylabel("Reward")
-    plt.plot(previous_total_rewards)
-    plt.show()
+    #plt.title("Q-Learning")
+    #plt.xlabel("Episode")
+    #plt.ylabel("Reward")
+    #plt.plot(previous_total_rewards)
+    #plt.show()
 
 
 
 if (__name__ == "__main__"):
-    Q_Learning()
+    main()
