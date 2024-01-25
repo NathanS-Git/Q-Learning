@@ -1,12 +1,10 @@
 import gymnasium as gym
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
 import random
 from collections import deque, namedtuple
 import numpy
-import math
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -45,31 +43,30 @@ class DQN(nn.Module):
 def main():
     env = gym.make("CartPole-v1")
 
-    replay = MemoryReplay(5000)
-
     q_network = DQN(env).to(device)
     target_network = DQN(env).to(device)
     target_network.load_state_dict(q_network.state_dict())
     #target_network = copy.deepcopy(q_network)
 
-    optimizer = optim.AdamW(q_network.parameters(), lr=1e-4, amsgrad=True)
-
     epsilon_start = 1
     epsilon_end = 0.01
     epsilon_end_episode = 500
 
+    lr = 0.00015
     gamma = 0.99
-    C = 10
+    C = 13
 
-    batch_size = 128
+    batch_size = 256
 
-    episode = 0
     max_episode_count = 1000
+    replay_bank_size = 5000
+
+    optimizer = optim.AdamW(q_network.parameters(), lr=lr, amsgrad=True)
+    replay = MemoryReplay(replay_bank_size)
 
     previous_total_rewards = []
-    steps_done = 0
 
-    while episode < max_episode_count:
+    for episode in range(max_episode_count):
         state,_ = env.reset()
         
         done = False
@@ -77,8 +74,6 @@ def main():
         total_reward = 0
         while not done and not truncated:
             epsilon = max(episode*((epsilon_end-epsilon_start)/epsilon_end_episode)+epsilon_start, epsilon_end)
-            
-            steps_done += 1
 
             if random.random() < epsilon:
                 action = env.action_space.sample()
@@ -107,6 +102,7 @@ def main():
             non_terminated_next_states = tuple(next_state for next_state in next_state_batch if next_state is not None)
             with torch.no_grad():
                 target_q_values = target_network(torch.tensor(numpy.array(non_terminated_next_states), device=device)).max(1,keepdim=True).values
+
             y = torch.tensor(reward_batch, device=device, dtype=torch.float32)
 
             y[mask] += target_q_values * gamma
@@ -125,8 +121,6 @@ def main():
 
         if len(previous_total_rewards) > 100:
             print(sum(previous_total_rewards[-100:])/100,epsilon,episode,total_reward,len(replay))
-
-        episode += 1
 
 
 if (__name__ == "__main__"):

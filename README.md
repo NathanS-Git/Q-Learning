@@ -1,15 +1,19 @@
-# Q-learning Applied to OpenAI's Cart-Pole Problem
+# Q-Learning Applied to the Cart-Pole Environment
 
 <img src=docs/learned.gif width=400px></img>
 
-This is my implementation of Q-learning on OpenAI's cart pole problem. Despite the state space being continuous for this problem, I discretize the values into buckets allowing Q-learning to function. 
+This is my implementation of Q-learning on the cart-pole environment. Despite the state space being continuous for this problem, I discretize the values into buckets allowing Q-learning to function. 
 
 The model fairly consistently solves the environment in about 600 episodes.
 
-##  
+## Contents
 
+- [Behaviour](#behaviour)
+- [Results](#results)
+- [Runs](#runs)
+- [References](#inspired-by-/-references)
 
-## Behvaiour
+## Behaviour
 
 ![Off-policy TD control algorithm (Q-learning)](docs/algorithm.png)
 
