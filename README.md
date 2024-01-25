@@ -1,10 +1,13 @@
-# Q-learning applied to OpenAI's cart-pole problem
+# Q-learning Applied to OpenAI's Cart-Pole Problem
 
 <img src=docs/learned.gif width=400px></img>
 
 This is my implementation of Q-learning on OpenAI's cart pole problem. Despite the state space being continuous for this problem, I discretize the values into buckets allowing Q-learning to function. 
 
 The model fairly consistently solves the environment in about 600 episodes.
+
+##  
+
 
 ## Behvaiour
 
@@ -28,11 +31,6 @@ The learned model balancing the pole.
 <img src="docs/Figure_2.png" width="400" />
 <img src="docs/Figure_3.png" width="400" />
 
-## Todo
-
-- [x] Q-learning
-- [ ] Deep Q-learning
-
 ## Inspired by / References
 ```bibtex
 @book{ sutton_barto_2018, 
@@ -40,5 +38,14 @@ The learned model balancing the pole.
     publisher={MIT Press Ltd}, 
     author={Sutton, Richard S. and Barto, Andrew G.}, 
     year={2018}
+}
+
+@misc{ mnih_kavuk_silver_2015,
+    title={Human-level control through deep reinforcement learning}
+    url={https://www.nature.com/articles/nature14236},
+    journal={Nature News},
+    publisher={Nature Publishing Group},
+    author={Volodymyr Mnih, Koray Kavukcuoglu, David Silver},
+    year={2015}
 }
 ```
