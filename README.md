@@ -1,17 +1,19 @@
-# Q-Learning Applied to the Cart-Pole Environment
+# Q-Learning Applied to the Cart Pole Environment
 
 <img src=docs/learned.gif width=400px></img>
 
-This is my implementation of Q-learning on the cart-pole environment. Despite the state space being continuous for this problem, I discretize the values into buckets allowing Q-learning to function. 
+In this repository, I've implementated both Deep Q-learning (DQN) and Tabular Q-learning on the cart pole environment.
 
-The model fairly consistently solves the environment in about 600 episodes.
+For the tabular version of q-learning despite the state space being continuous for this problem, I discretize the values into buckets allowing it to function. 
+
+Both of the models fairly consistently solve the environment in about 600 episodes (with some randomness of course).
 
 ## Contents
 
 - [Behaviour](#behaviour)
 - [Results](#results)
 - [Runs](#runs)
-- [References](#inspired-by-/-references)
+- [References](#inspired-by--references)
 
 ## Behaviour
 
