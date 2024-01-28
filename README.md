@@ -2,7 +2,7 @@
 
 <img src=docs/learned.gif width=400px></img>
 
-In this repository, I've implementated both Deep Q-learning (DQN) and Tabular Q-learning on the cart pole environment.
+In this repository, I've implemented both Deep Q-learning (DQN) and Tabular Q-learning on the cart pole environment.
 
 For the tabular version of q-learning despite the state space being continuous for this problem, I discretize the values into buckets allowing it to function. 
 
